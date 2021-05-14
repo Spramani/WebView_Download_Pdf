@@ -22,6 +22,42 @@ class ViewController: UIViewController,UIScrollViewDelegate, URLSessionDelegate
         self.Web.scrollView.delegate = self
 //        self.Web.navigationDelegate = self
         Web.scrollView.isScrollEnabled = true
+        
+        
+        
+        
+           let source: String = "var meta = document.createElement('meta');" +
+               "meta.name = 'viewport';" +
+               "meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';" +
+               "var head = document.getElementsByTagName('head')[0];" +
+               "head.appendChild(meta);"
+           let script: WKUserScript = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+           let userContentController: WKUserContentController = WKUserContentController()
+           let configuration = WKWebViewConfiguration()
+           let preferences = WKPreferences()
+           
+           
+           preferences.javaScriptEnabled = true
+           preferences.javaScriptCanOpenWindowsAutomatically = true
+           configuration.preferences = preferences
+           configuration.userContentController = userContentController
+           userContentController.addUserScript(script)
+           
+           
+           let web2 = WKWebView(frame: .zero, configuration: configuration)
+            web2.frame = self.view.frame
+           self.view.addSubview(web2)
+//           web2.translatesAutoresizingMaskIntoConstraints = false
+//           NSLayoutConstraint.activate([web2.topAnchor.constraint(equalTo: view.bottomAnchor),web2.leftAnchor.constraint(equalTo: self.view.leftAnchor),web2.rightAnchor.constraint(equalTo: self.view.rightAnchor),web2.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)])
+
+           
+           if let url = URL(string: urlString!) {
+               let urlRequest = URLRequest(url: url)
+               web2.load(urlRequest)
+           }
+           web2.uiDelegate = self
+           web2.scrollView.isScrollEnabled = true
+        
        
         setupWebView()
         loadWebView()
@@ -39,7 +75,7 @@ class ViewController: UIViewController,UIScrollViewDelegate, URLSessionDelegate
     }
     
     func loadWebView() {
-        if let url = URL(string: "") // Enter Web url 
+        if let url = URL(string: "https://schoolapp.neverskip.com/exapp/#/reptexam_v1/2197/193109/163") // Enter Web url
         {
             let urlRequest = URLRequest(url: url)
             Web.load(urlRequest)
@@ -50,17 +86,34 @@ class ViewController: UIViewController,UIScrollViewDelegate, URLSessionDelegate
     
     
     //MARK: - UIScrollViewDelegate
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        nil
+    }
+    
     func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
         scrollView.pinchGestureRecognizer?.isEnabled = false
     }
 
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        scrollView.contentSize = .zero
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        webView.scrollView.subviews.forEach { subview in
+            subview.gestureRecognizers?.forEach { recognizer in
+                if let tapRecognizer = recognizer as? UITapGestureRecognizer,
+                    tapRecognizer.numberOfTapsRequired == 2 && tapRecognizer.numberOfTouchesRequired == 1 {
+                    subview.removeGestureRecognizer(recognizer)
+                }
+            }
+        }
+    }
 }
 
 
 extension ViewController: WKUIDelegate {
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         
-      
         openLinkInSafari(withURLString: "\(String(describing: navigationAction.request.url!))")
   
         return nil

